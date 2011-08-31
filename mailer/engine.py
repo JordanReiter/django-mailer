@@ -1,4 +1,5 @@
 import time
+import os
 import smtplib
 import logging
 
@@ -46,7 +47,11 @@ def send_all():
     Send all eligible messages in the queue.
     """
     
-    lock = FileLock("send_mail")
+    try:
+        lock_path = settings.MAILER_LOCKFILE
+    except AttributeError:
+        lock_path = "send_mail"
+    lock = FileLock(lock_path)
     
     logging.debug("acquiring lock...")
     try:
