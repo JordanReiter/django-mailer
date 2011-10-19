@@ -1,4 +1,3 @@
-
 =====
 Usage
 =====
@@ -69,6 +68,14 @@ details.
 
 .. _pinax documentation: http://pinaxproject.com/docs/dev/deployment.html#sending-mail-and-notices
 
+Using a custom lock file
+========================
+
+If at some point you want to use a custom path for the lock file used during the mail 
+send command, simply use the MAILER_LOCKFILE setting:
+
+    MAILER_LOCKFILE = "/tmp/send_mail"
+
 Using EMAIL_BACKEND
 ===================
 
@@ -79,7 +86,7 @@ your settings file, you first have to set EMAIL_BACKEND::
     EMAIL_BACKEND = "mailer.backend.DbBackend"
 
 If you were previously using a non-default EMAIL_BACKEND, you need to configure
-the MAILER setting_EMAIL_BACKEND, so that django-mailer knows how to actually send
+the setting MAILER_EMAIL_BACKEND, so that django-mailer knows how to actually send
 the mail::
 
     MAILER_EMAIL_BACKEND = "your.actual.EmailBackend"
