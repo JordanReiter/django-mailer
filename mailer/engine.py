@@ -83,7 +83,7 @@ def send_all():
             try:
                 connection = connections.get(message.get_priority_display())
                 if connection is None:
-                    connection = get_connection(backend=EMAIL_BACKENDS.get(message.get_priority_display()) or EMAIL_BACKEND)
+                    connection = get_connection(backend=EMAIL_PRIORITY_BACKENDS.get(message.get_priority_display()) or EMAIL_BACKEND)
                     connections[message.get_priority_display()] = connection
                 logging.info("sending message '%s' to %s" % (message.subject.encode("utf-8"), u", ".join(message.to_addresses).encode("utf-8")))
                 email = message.email
