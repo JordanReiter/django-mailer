@@ -28,11 +28,11 @@ PRIORITY_MAPPING = {
 
 
 def send_mail(subject, message, from_email, recipient_list, priority="medium",
-              fail_silently=False, auth_user=None, auth_password=None):
+              fail_silently=False, auth_user=None, auth_password=None, bcc=None):
     from django.utils.encoding import force_unicode
     from mailer.models import make_message
     
-    priority = PRIORITY_MAPPING[priority]
+    priority = PRIORITY_MAPPING.get(priority) or PRIORITY_MAPPING.get("medium")
     
     # need to do this in case subject used lazy version of ugettext
     subject = force_unicode(subject)
@@ -48,7 +48,7 @@ def send_mail(subject, message, from_email, recipient_list, priority="medium",
 
 def send_html_mail(subject, message, message_html, from_email, recipient_list,
                    priority="medium", fail_silently=False, auth_user=None,
-                   auth_password=None):
+                   auth_password=None, bcc=None):
     """
     Function to queue HTML e-mails
     """
@@ -56,7 +56,7 @@ def send_html_mail(subject, message, message_html, from_email, recipient_list,
     from django.core.mail import EmailMultiAlternatives
     from mailer.models import make_message
     
-    priority = PRIORITY_MAPPING[priority]
+    priority = PRIORITY_MAPPING.get(priority) or PRIORITY_MAPPING.get("medium")
     
     # need to do this in case subject used lazy version of ugettext
     subject = force_unicode(subject)
