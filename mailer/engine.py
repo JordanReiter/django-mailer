@@ -29,6 +29,7 @@ LOCK_WAIT_TIMEOUT = getattr(settings, "MAILER_LOCK_WAIT_TIMEOUT", -1)
 # The actual backend to use for sending, defaulting to the Django default.
 EMAIL_BACKEND = getattr(settings, "MAILER_EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend")
 EMAIL_PRIORITY_BACKENDS = getattr(settings, "MAILER_EMAIL_PRIORITY_BACKENDS", {})
+EMAIL_EXCEPTIONS = getattr(settings, 'MAILER_EMAIL_EXCEPTIONS', [])
 
 
 def prioritize():
@@ -93,6 +94,15 @@ def send_all():
                 message.delete()
                 sent += 1
             except (socket_error, smtplib.SMTPSenderRefused, smtplib.SMTPRecipientsRefused, smtplib.SMTPAuthenticationError), err:
+                message.defer()
+                logging.info("message deferred due to failure: %s" % err)
+                MessageLog.objects.log(message, 3, log_message=str(err)) # @@@ avoid using literal result code
+                deferred += 1
+                # Get new connection, it case the connection itself has an error.
+                connection = None
+            except Exception, err:
+                if type(err) not in EMAIL_EXCEPTIONS:
+                    raise
                 message.defer()
                 logging.info("message deferred due to failure: %s" % err)
                 MessageLog.objects.log(message, 3, log_message=str(err)) # @@@ avoid using literal result code
