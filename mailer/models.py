@@ -143,7 +143,7 @@ def filter_recipient_list(lst):
     return retval
 
 
-def make_message(subject="", body="", from_email=None, to=None, bcc=None,
+def make_message(subject="", body="", from_email=None, to=None, cc=None, bcc=None,
                  attachments=None, headers=None, priority=None):
     """
     Creates a simple message for the email parameters supplied.
@@ -157,7 +157,7 @@ def make_message(subject="", body="", from_email=None, to=None, bcc=None,
     to = filter_recipient_list(to)
     bcc = filter_recipient_list(bcc)
     core_msg = EmailMessage(subject=subject, body=body, from_email=from_email,
-                            to=to, bcc=bcc, attachments=attachments, headers=headers)
+                            to=to, cc=cc, bcc=bcc, attachments=attachments, headers=headers)
     
     db_msg = Message(priority=priority)
     db_msg.email = core_msg
